@@ -112,6 +112,7 @@ RUN echo "source activate py3" >> /root/.bashrc
 # Install JupyterLab and set up its configuration
 RUN pip install --upgrade pip && \
     pip install jupyterlab && \
+    /bin/bash -c "source activate py3 && ipython kernel install --user --name=py3 && source deactivate" && \
     echo "y" | jupyter lab --generate-config && \
     echo "c.ServerApp.ip = '0.0.0.0'" >> /root/.jupyter/jupyter_server_config.py && \
     echo "c.ServerApp.allow_root = True" >> /root/.jupyter/jupyter_server_config.py && \
