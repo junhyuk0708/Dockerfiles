@@ -1,0 +1,33 @@
+# Base Image
+FROM nvcr.io/nvidia/pyg:24.03-py3
+
+# Set noninteractive environment for apt-get install
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Seoul
+
+# Remove any third-party apt sources to avoid issues with expiring keys
+RUN rm -f /etc/apt/sources.list.d/*.list
+
+# Update package list & Install basic utilities
+RUN apt-get update -q -y && \
+    apt-get install -y --no-install-recommends wget vim curl ssh tree sudo git zip unzip libgl1-mesa-glx software-properties-common && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
+
+# Install JupyterLab
+RUN pip install --upgrade pip && \
+    pip install jupyterlab
+
+# Generate JupyterLab configuration and modify settings
+RUN echo "y" | jupyter lab --generate-config && \
+    echo "c.ServerApp.ip = '0.0.0.0'" >> /root/.jupyter/jupyter_server_config.py && \
+    echo "c.ServerApp.allow_root = True" >> /root/.jupyter/jupyter_server_config.py && \
+    echo "c.ServerApp.open_browser = False" >> /root/.jupyter/jupyter_server_config.py
+
+
+# Install Python packages excluding PyTorch related ones
+# RUN python3.8 -m pip install numpy scipy matplotlib pandas scikit-learn ipython seaborn tqdm efficientnet_pytorch ultralytics
+
+# Install PyTorch related packages
+# RUN python3.8 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118

@@ -19,21 +19,23 @@ RUN apt-get update -q -y && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     curl https://bootstrap.pypa.io/get-pip.py | python3.8
 
-# Install JupyterLab and set up its configuration
+# Install JupyterLab, ipywidgets, and set up Jupyter configuration
 RUN python3.8 -m pip install --upgrade pip && \
-    python3.8 -m pip install jupyterlab && \
+    python3.8 -m pip install jupyterlab ipywidgets notebook && \
     echo "y" | jupyter lab --generate-config && \
     echo "c.ServerApp.ip = '0.0.0.0'" >> /root/.jupyter/jupyter_server_config.py && \
     echo "c.ServerApp.allow_root = True" >> /root/.jupyter/jupyter_server_config.py && \
     echo "c.ServerApp.open_browser = False" >> /root/.jupyter/jupyter_server_config.py
 
 # Install Python packages 
-RUN pip install numpy==1.19
+RUN pip install numpy==1.19.5
 RUN python3.8 -m pip install mxnet
 RUN pip install gluonnlp==0.8.0
 RUN python3.8 -m pip install pandas==1.1 tqdm
 RUN python3.8 -m pip install sentencepiece
 RUN python3.8 -m pip install transformers
+RUN pip install scipy==1.10.1 # numpy&scikitlearn 호환
+RUN python3.8 -m pip install scikit-learn==1.3.2
 
 # Install PyTorch related packages
 RUN pip install torch==2.1 torchvision==0.16 torchaudio==2.1 --index-url https://download.pytorch.org/whl/cu118
