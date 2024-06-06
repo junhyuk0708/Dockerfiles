@@ -32,8 +32,9 @@ RUN pip install numpy==1.19.5
 RUN python3.8 -m pip install mxnet
 RUN pip install gluonnlp==0.8.0
 RUN python3.8 -m pip install pandas==1.1 tqdm
-RUN python3.8 -m pip install sentencepiece
-RUN python3.8 -m pip install transformers
+RUN pip install matplotlib==3.6.3
+RUN python3.8 -m pip install sentencepiece==0.1.91 # 현재 0.2.0
+RUN python3.8 -m pip install transformers==4.8.2 # 현재4.40.2
 RUN pip install scipy==1.10.1 # numpy&scikitlearn 호환
 RUN python3.8 -m pip install scikit-learn==1.3.2
 

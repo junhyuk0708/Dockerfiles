@@ -25,6 +25,10 @@ RUN echo "y" | jupyter lab --generate-config && \
     echo "c.ServerApp.allow_root = True" >> /root/.jupyter/jupyter_server_config.py && \
     echo "c.ServerApp.open_browser = False" >> /root/.jupyter/jupyter_server_config.py
 
+#
+RUN pip install torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-2.3.0+cu124.html
+# torch-cluster torch-spline-conv
+
 
 # Install Python packages excluding PyTorch related ones
 # RUN python3.8 -m pip install numpy scipy matplotlib pandas scikit-learn ipython seaborn tqdm efficientnet_pytorch ultralytics
