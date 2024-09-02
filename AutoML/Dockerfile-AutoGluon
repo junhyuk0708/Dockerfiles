@@ -1,0 +1,33 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    wget \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip and install Python packages including JupyterLab and AutoGluon 
+RUN pip install --upgrade pip && \
+    pip install jupyterlab autogluon seaborn
+
+# Expose the port for JupyterLab
+EXPOSE 8888
+
+# Define environment variables to avoid locale issues
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
+# Set up JupyterLab configuration
+RUN jupyter lab --generate-config && \
+    echo "c.ServerApp.ip = '0.0.0.0'" >> /root/.jupyter/jupyter_server_config.py && \
+    echo "c.ServerApp.allow_root = True" >> /root/.jupyter/jupyter_server_config.py && \
+    echo "c.ServerApp.open_browser = False" >> /root/.jupyter/jupyter_server_config.py
